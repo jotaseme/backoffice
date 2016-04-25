@@ -1,0 +1,147 @@
+{% extends 'base.html.twig' %}
+
+{%  block title %}
+    Cecofersa BackOffice
+{% endblock %}
+
+{% block body %}
+    <body class="skin-red-light">
+        <div class="wrapper">
+        {% block header %}
+            {% include 'header.html.twig' %}
+        {% endblock %}
+
+        {% block sidebar %}
+            {% include 'sidebar.html.twig' %}
+        {% endblock %}
+        </div>
+        <div class="content-wrapper">
+            <section class="content-header">
+                <h1>
+                    Inicio
+                    <small>preview of simple tables</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li class="active"><i class="fa fa-dashboard"></i> Inicio</li>
+                </ol>
+            </section>
+            <section class="content">
+                <div class="row">
+                    <div class="col-lg-3 col-xs-6">
+                        <!-- small box -->
+                        <div class="small-box bg-aqua">
+                            <div class="inner">
+                                <h3>{{ count_asociados }}</h3>
+                                <p>Asociados</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-person"></i>
+                            </div>
+                            <a href="{{ path('asociados') }}" class="small-box-footer">Más información <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div><!-- ./col -->
+                    <div class="col-lg-3 col-xs-6">
+                        <!-- small box -->
+                        <div class="small-box bg-green">
+                            <div class="inner">
+                                <h3>{{ count_proveedores }}</h3>
+                                <p>Proveedores</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-person"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div><!-- ./col -->
+                    <div class="col-lg-3 col-xs-6">
+                        <!-- small box -->
+                        <div class="small-box bg-yellow">
+                            <div class="inner">
+                                <h3>{{ count_ficheros }}</h3>
+                                <p>Ficheros</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-android-folder"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div><!-- ./col -->
+                    <div class="col-lg-3 col-xs-6">
+                        <!-- small box -->
+                        <div class="small-box bg-red">
+                            <div class="inner">
+                                <h3>65</h3>
+                                <p>Unique Visitors</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-pie-graph"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div><!-- ./col -->
+                </div><!-- /.row -->
+
+
+
+
+
+
+                <div id="container" class="col-lg-12 col-xs-6"style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            </section>
+        </div>
+    </body>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+
+    <script>
+        $(function () {
+            $('#container').highcharts({
+                chart: {
+                    type: 'spline'
+                },
+                title: {
+                    text: 'Histórico descargas FrontOffice'
+                },
+                subtitle: {
+                    text: 'Contador histórico anual de descargas de asociados   '
+                },
+                xAxis: {
+                    type: 'datetime',
+                    dateTimeLabelFormats: { // don't display the dummy year
+                        month: '%e. %b',
+                        year: '%b'
+                    },
+                    title: {
+                        text: 'Mes'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Descargas totales (miles)'
+                    },
+                    min: 0
+                },
+                tooltip: {
+                    headerFormat: '<b>{series.name}</b><br>',
+                    pointFormat: '{point.x:%e. %b}: {point.y:.0f}'
+                },
+
+                plotOptions: {
+                    spline: {
+                        marker: {
+                            enabled: true
+                        }
+                    }
+                },
+
+                series: {{ series_historico|json_encode|raw }}
+            });
+        });
+    </script>
+{% endblock %}

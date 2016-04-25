@@ -1,0 +1,7 @@
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+comprabuena:
+    resource: "@ComprabuenaBundle/Controller/"
+    type:     annotation

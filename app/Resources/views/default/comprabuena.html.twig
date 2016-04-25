@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{%  block title %}
+    Cecofersa BackOffice
+{% endblock %}
+
+{% block body %}
+    <body class="skin-red-light">
+        <div class="wrapper">
+        {% block header %}
+            {% include 'header.html.twig' %}
+        {% endblock %}
+
+        {% block sidebar %}
+            {% include 'sidebar.html.twig' %}
+        {% endblock %}
+        </div>
+        <div class="content-wrapper">
+            <section class="content-header">
+                <h1>
+                    Gestión CompraBuena
+                    <small>preview of simple tables</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i> <a href="{{ path("homepage") }}"> Inicio</a></li>
+                    <li class="active"> CompraBuena</li>
+                </ol>
+            </section>
+            <section class="content">
+                <div class="row">
+                    <section class="col-lg-6">
+                        <div class = "box">
+                            <h3 class="box-header"> Pedidos</h3>
+                            <div class="box-body">
+
+
+                                {% for pedido in pedidos %}
+                                    Title : {{ pedido.reference }}<br>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </section>
+                    <section class="col-lg-6">
+                        <div class = "box">
+                            <h3 class="box-header"> Clientes registrados</h3>
+                        </div>
+                    </section>
+                </div>
+                <br/>
+                <div class="content">
+
+                </div>
+
+            </section>
+        </div>
+    </body>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+{% endblock %}

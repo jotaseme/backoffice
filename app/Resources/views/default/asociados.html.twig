@@ -1,0 +1,569 @@
+{% extends 'base.html.twig' %}
+
+{%  block title %}
+    Cecofersa BackOffice
+{% endblock %}
+
+{% block body %}
+    <style>
+        #container_sp {
+            height: 500px;
+            min-width: 310px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .loading {
+            margin-top: 10em;
+            text-align: center;
+            color: gray;
+        }
+    </style>
+    <body class="skin-red-light">
+        <div class="wrapper">
+        {% block header %}
+            {% include 'header.html.twig' %}
+        {% endblock %}
+
+        {% block sidebar %}
+            {% include 'sidebar.html.twig' %}
+        {% endblock %}
+        </div>
+        <div class="content-wrapper">
+            <section class="content-header">
+                <h1>
+                    Asociados
+                    <small>preview of simple tables</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                    <li class="active">Asociados</li>
+                </ol>
+            </section>
+            <section class="content">
+                <div class="row">
+                    <div class="col-xs-7">
+                        <div class="box">
+                                    <div class="box-body">
+                                        <table id="example1" class="table table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>Nombre asociado</th>
+                                                <th>Usuarios</th>
+                                                <th>Status</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for asociado in asociados %}
+                                                <tr>
+                                                    <td><a href="{{ path('detalle_asociado', {'id_asociado': asociado.idAsociado}) }}"> {{asociado.nombre }}</a></td>
+                                                    <td><span class="badge">{{ asociado.usuarios|length }}</span></td>
+                                                    <td><span class="label label-success">Approved</span></td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <th>Nombre asociado</th>
+                                                <th>Usuarios</th>
+                                                <th>Status</th>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div><!-- /.box-body -->
+                        </div><!-- /.box -->
+                    </div> <!-- /.col-xs-8 -->
+                    <div class="col-xs-5">
+                        <div class="box">
+                            <div class="box-body">
+                                <h3>Asociados Cecofersa</h3>
+                                <div class="box-body no-padding">
+                                    <ul class="nav nav-pills nav-stacked">
+                                        <li><a><i class="fa fa-circle-o text-back"></i> España: {{ cont_sp }}</a></li>
+
+                                        <li><a><i class="fa fa-circle-o text-light-blue"></i> Portugal: {{ cont_pt }}</a></li>
+                                    </ul>
+                                </div><!-- /.box-body -->
+                                <div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box">
+                            <div class="box-body">
+                                <h3>Distribucion asociados España</h3>
+                                <div id="container_sp"></div>
+                            </div>
+                        </div>
+                        <div class="box">
+                            <div class="box-body">
+                                <h3>Distribucion asociados Portugal</h3>
+                                <div id="container_pt"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- /.row -->
+            </section>
+        </div>
+    </body>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="//code.highcharts.com/maps/modules/map.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/mapdata/countries/es/es-all.js"></script>
+    <script src="http://code.highcharts.com/mapdata/countries/pt/pt-all.js"></script>
+
+
+    <script>
+        $(function () {
+                $("#example1").DataTable({
+                    "iDisplayLength": 200
+                });
+                $('#container').highcharts({
+                    chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: 0,
+                        plotShadow: false
+                    },
+                    title: {
+                        text: 'Asociados<br>Cecofersa<br>2016',
+                        align: 'center',
+                        verticalAlign: 'middle',
+                        y: 40
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
+                    },
+                    plotOptions: {
+                        pie: {
+                            dataLabels: {
+                                enabled: true,
+                                distance: -50,
+                                style: {
+                                    fontWeight: 'bold',
+                                    color: 'white',
+                                    textShadow: '0px 1px 2px black'
+                                }
+                            },
+                            startAngle: -90,
+                            endAngle: 90,
+                            center: ['50%', '75%']
+                        }
+                    },
+                    exporting: {
+                      enabled:false
+                    },
+                    series: [{
+                        type: 'pie',
+                        name: 'Total    ',
+                        innerSize: '50%',
+                        data: [
+                            ['Portugal', {{ porcen_pt }}],
+                            ['España',   {{ porcen_sp }}],
+                            {
+                                name: 'Proprietary or Undetectable',
+                                y: 0.2,
+                                dataLabels: {
+                                    enabled: false
+                                }
+                            }
+                        ]
+                    }]
+                });
+
+                var data = [
+                    {
+                        "hc-key": "es-pm",
+                        "value": 0
+                    },
+                    {
+                        "hc-key": "es-va",
+                        "value": 1
+                    },
+                    {
+                        "hc-key": "es-le",
+                        "value": 2
+                    },
+                    {
+                        "hc-key": "es-me",
+                        "value": 3
+                    },
+                    {
+                        "hc-key": "es-p",
+                        "value": 4
+                    },
+                    {
+                        "hc-key": "es-s",
+                        "value": 5
+                    },
+                    {
+                        "hc-key": "es-na",
+                        "value": 6
+                    },
+                    {
+                        "hc-key": "es-ce",
+                        "value": 7
+                    },
+                    {
+                        "hc-key": "es-cu",
+                        "value": 8
+                    },
+                    {
+                        "hc-key": "es-vi",
+                        "value": 9
+                    },
+                    {
+                        "hc-key": "es-ss",
+                        "value": 10
+                    },
+                    {
+                        "hc-key": "es-gr",
+                        "value": 11
+                    },
+                    {
+                        "hc-key": "es-mu",
+                        "value": 12
+                    },
+                    {
+                        "hc-key": "es-bu",
+                        "value": 13
+                    },
+                    {
+                        "hc-key": "es-sa",
+                        "value": 14
+                    },
+                    {
+                        "hc-key": "es-za",
+                        "value": 15
+                    },
+                    {
+                        "hc-key": "es-hu",
+                        "value": 16
+                    },
+                    {
+                        "hc-key": "es-m",
+                        "value": 17
+                    },
+                    {
+                        "hc-key": "es-gu",
+                        "value": 18
+                    },
+                    {
+                        "hc-key": "es-sg",
+                        "value": 19
+                    },
+                    {
+                        "hc-key": "es-se",
+                        "value": 20
+                    },
+                    {
+                        "hc-key": "es-t",
+                        "value": 21
+                    },
+                    {
+                        "hc-key": "es-te",
+                        "value": 22
+                    },
+                    {
+                        "hc-key": "es-v",
+                        "value": 23
+                    },
+                    {
+                        "hc-key": "es-bi",
+                        "value": 24
+                    },
+                    {
+                        "hc-key": "es-or",
+                        "value": 25
+                    },
+                    {
+                        "hc-key": "es-l",
+                        "value": 26
+                    },
+                    {
+                        "hc-key": "es-z",
+                        "value": 27
+                    },
+                    {
+                        "hc-key": "es-gi",
+                        "value": 28
+                    },
+                    {
+                        "hc-key": "es-ab",
+                        "value": 29
+                    },
+                    {
+                        "hc-key": "es-a",
+                        "value": 30
+                    },
+                    {
+                        "hc-key": "es-av",
+                        "value": 31
+                    },
+                    {
+                        "hc-key": "es-cc",
+                        "value": 32
+                    },
+                    {
+                        "hc-key": "es-to",
+                        "value": 33
+                    },
+                    {
+                        "hc-key": "es-ba",
+                        "value": 34
+                    },
+                    {
+                        "hc-key": "es-co",
+                        "value": 35
+                    },
+                    {
+                        "hc-key": "es-h",
+                        "value": 36
+                    },
+                    {
+                        "hc-key": "es-c",
+                        "value": 37
+                    },
+                    {
+                        "hc-key": "es-ma",
+                        "value": 38
+                    },
+                    {
+                        "hc-key": "es-po",
+                        "value": 39
+                    },
+                    {
+                        "hc-key": "es-lo",
+                        "value": 40
+                    },
+                    {
+                        "hc-key": "es-so",
+                        "value": 41
+                    },
+                    {
+                        "hc-key": "es-al",
+                        "value": 42
+                    },
+                    {
+                        "hc-key": "es-b",
+                        "value": 43
+                    },
+                    {
+                        "hc-key": "es-ca",
+                        "value": 44
+                    },
+                    {
+                        "hc-key": "es-o",
+                        "value": 45
+                    },
+                    {
+                        "hc-key": "es-cs",
+                        "value": 46
+                    },
+                    {
+                        "hc-key": "es-cr",
+                        "value": 47
+                    },
+                    {
+                        "hc-key": "es-j",
+                        "value": 48
+                    },
+                    {
+                        "hc-key": "es-lu",
+                        "value": 49
+                    },
+                    {
+                        "hc-key": "es-tf",
+                        "value": 50
+                    },
+                    {
+                        "hc-key": "es-gc",
+                        "value": 51
+                    },
+                    {
+                        "value": 52
+                    }
+                ];
+                $('#container_sp').highcharts('Map', {
+
+                    title : {
+                        text : ' '
+                    },
+
+                    subtitle : {
+                        text : ' '
+                    },
+
+                    mapNavigation: {
+
+                        buttonOptions: {
+                            verticalAlign: 'bottom'
+                        }
+                    },
+
+                    colorAxis: {
+                        min: 0
+                    },
+                    exporting: {
+                        enabled:false
+                    },
+
+                    series : [{
+                        data : data,
+                        mapData: Highcharts.maps['countries/es/es-all'],
+                        joinBy: 'hc-key',
+                        name: 'Asociados',
+                        states: {
+                            hover: {
+                                color: '#BADA55'
+                            }
+                        },
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.name}'
+                        }
+                    }, {
+                        name: 'Separators',
+                        type: 'mapline',
+                        data: Highcharts.geojson(Highcharts.maps['countries/es/es-all'], 'mapline'),
+                        color: 'silver',
+                        showInLegend: false,
+                        enableMouseTracking: false
+                    }]
+                });
+
+                var data1 = [
+                    {
+                        "hc-key": "pt-fa",
+                        "value": 0
+                    },
+                    {
+                        "hc-key": "pt-li",
+                        "value": 1
+                    },
+                    {
+                        "hc-key": "pt-av",
+                        "value": 2
+                    },
+                    {
+                        "hc-key": "pt-vc",
+                        "value": 3
+                    },
+                    {
+                        "hc-key": "pt-be",
+                        "value": 4
+                    },
+                    {
+                        "hc-key": "pt-ev",
+                        "value": 5
+                    },
+                    {
+                        "hc-key": "pt-se",
+                        "value": 6
+                    },
+                    {
+                        "hc-key": "pt-pa",
+                        "value": 7
+                    },
+                    {
+                        "hc-key": "pt-sa",
+                        "value": 8
+                    },
+                    {
+                        "hc-key": "pt-br",
+                        "value": 9
+                    },
+                    {
+                        "hc-key": "pt-le",
+                        "value": 10
+                    },
+                    {
+                        "hc-key": "pt-ba",
+                        "value": 11
+                    },
+                    {
+                        "hc-key": "pt-cb",
+                        "value": 12
+                    },
+                    {
+                        "hc-key": "pt-gu",
+                        "value": 13
+                    },
+                    {
+                        "hc-key": "pt-co",
+                        "value": 14
+                    },
+                    {
+                        "hc-key": "pt-po",
+                        "value": 15
+                    },
+                    {
+                        "hc-key": "pt-vi",
+                        "value": 16
+                    },
+                    {
+                        "hc-key": "pt-vr",
+                        "value": 17
+                    },
+                    {
+                        "hc-key": "pt-ma",
+                        "value": 18
+                    },
+                    {
+                        "hc-key": "pt-ac",
+                        "value": 19
+                    },
+                    {
+                        "value": 20
+                    }
+                ];
+                $('#container_pt').highcharts('Map', {
+
+                    title : {
+                        text : ' '
+                    },
+
+                    subtitle : {
+                        text : ' '
+                    },
+                    exporting: {
+                        enabled:false
+                    },
+                    mapNavigation: {
+
+                        buttonOptions: {
+                            verticalAlign: 'bottom'
+                        }
+                    },
+
+                    colorAxis: {
+                        min: 0
+                    },
+
+                    series : [{
+                        data : data1,
+                        mapData: Highcharts.maps['countries/pt/pt-all'],
+                        joinBy: 'hc-key',
+                        name: 'Asociados',
+                        states: {
+                            hover: {
+                                color: '#BADA55'
+                            }
+                        },
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.name}'
+                        }
+                    }, {
+                        name: 'Separators',
+                        type: 'mapline',
+                        data: Highcharts.geojson(Highcharts.maps['countries/pt/pt-all'], 'mapline'),
+                        color: 'silver',
+                        showInLegend: false,
+                        enableMouseTracking: false
+                    }]
+                });
+            });
+    </script>
+{% endblock %}

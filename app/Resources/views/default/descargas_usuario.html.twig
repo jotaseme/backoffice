@@ -1,0 +1,207 @@
+{% extends 'base.html.twig' %}
+
+{%  block title %}
+    Cecofersa BackOffice
+{% endblock %}
+
+{% block body %}
+    <body class="skin-red-light">
+        <div class="wrapper">
+        {% block header %}
+            {% include 'header.html.twig' %}
+        {% endblock %}
+
+        {% block sidebar %}
+            {% include 'sidebar.html.twig' %}
+        {% endblock %}
+        </div>
+        <div class="content-wrapper">
+            <section class="content-header">
+                <h1>
+                    {{ usuario }}
+                    <small>Descargas</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                    <li><a href="#">Descargas</a></li>
+                    <li class="active">{{ usuario }}</li>
+                </ol>
+            </section>
+
+            <section class="content">
+                <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#descargas_tab" data-toggle="tab">Todas las descargas</a></li>
+                    <li><a href="#estadisticas" data-toggle="tab">Estadísticas</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="active tab-pane" id="descargas_tab">
+                        <table id="descargas" class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>Nombre fichero</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for descarga in descargas %}
+                                <tr>
+                                    <td>{{ descarga.ficheroIdFichero.path }}/{{ descarga.ficheroIdFichero.nombre }}</td>
+                                    <td>{{ descarga.fecha|date("d/m/Y") }}</td>
+                                    <td>{{ descarga.fecha|date("H:i:s") }}</td>
+
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <th>Nombre Fichero</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                            </tr>
+                            </tfoot>
+                        </table>
+
+                    </div><!-- /.tab-pane -->
+
+                    <div class="tab-pane" id="estadisticas">
+                        <div id="container" style="min-width: 910px; height: 400px; margin: 0 auto">
+
+                        </div>
+                        <br>
+                        <hr>
+                        <br>
+                        <div id="historico" style="min-width: 910px; height: 400px; margin: 0 auto"></div>
+                    </div><!-- /.tab-pane -->
+                </div><!-- /.tab-content -->
+            </div><!-- /.nav-tabs-custom -->
+            </section>
+        </div>
+    </body>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $(function () {
+            $("#descargas").DataTable({
+                "iDisplayLength": 150,
+                "bSort": false
+            });
+
+
+        });
+    </script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script>
+        $(function () {
+            $('#container').highcharts({
+                chart: {
+                    type: 'spline'
+                },
+                title: {
+                    text: 'Descargas durante el {{ 'now'|date('Y') }}'
+
+                },
+                subtitle: {
+                    text: 'Usuario: {{ usuario }}'
+                },
+                xAxis: {
+                    categories: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+                        'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+                },
+                yAxis: {
+                    title: {
+                        text: 'Nº Descargas'
+                    },
+                    labels: {
+                        formatter: function () {
+                            return this.value;
+                        }
+                    }
+                },
+                tooltip: {
+                    crosshairs: true,
+                    shared: true
+                },
+                plotOptions: {
+                    spline: {
+                        marker: {
+                            radius: 4,
+                            lineColor: '#666666',
+                            lineWidth: 1
+                        }
+                    }
+                },
+                series: [{
+                    name: {{ usuario|json_encode|raw }},
+                    marker: {
+                        symbol: 'square'
+                    },
+                    data: {{ contador|json_encode|raw }}
+
+                }]
+            });
+        });
+    </script>
+
+    <script>
+        $(function () {
+            $('#historico').highcharts({
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Histórico anual de descargas'
+                },
+                subtitle: {
+                    text: 'Usuario: {{ usuario }}'
+                },
+                xAxis: {
+                    type: 'category',
+                    labels: {
+                        rotation: -45,
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Descargas'
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                tooltip: {
+                    pointFormat: '<b>{point.y} </b>'
+                },
+                series: [{
+                    name: 'Descargas    ',
+                    data: {{ contador_anual|raw }},
+                    dataLabels: {
+                        enabled: true,
+                        rotation: -90,
+                        color: '#FFFFFF',
+                        align: 'right',
+
+                        y: 10, // 10 pixels down from the top
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+                }]
+            });
+        });
+    </script>
+
+{% endblock %}

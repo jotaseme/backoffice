@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="ComprabuenaBundle\Entity\Orders" table="orders">
+    <indexes>
+      <index name="reference" columns="reference"/>
+      <index name="id_customer" columns="id_customer"/>
+      <index name="id_cart" columns="id_cart"/>
+      <index name="invoice_number" columns="invoice_number"/>
+      <index name="id_carrier" columns="id_carrier"/>
+      <index name="id_lang" columns="id_lang"/>
+      <index name="id_currency" columns="id_currency"/>
+      <index name="id_address_delivery" columns="id_address_delivery"/>
+      <index name="id_address_invoice" columns="id_address_invoice"/>
+      <index name="id_shop_group" columns="id_shop_group"/>
+      <index name="current_state" columns="current_state"/>
+      <index name="id_shop" columns="id_shop"/>
+      <index name="date_add" columns="date_add"/>
+    </indexes>
+    <id name="idOrder" type="integer" column="id_order">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="reference" type="string" column="reference" length="9" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="idShopGroup" type="integer" column="id_shop_group" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="idShop" type="integer" column="id_shop" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="idCarrier" type="integer" column="id_carrier" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idLang" type="integer" column="id_lang" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idCustomer" type="integer" column="id_customer" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idCart" type="integer" column="id_cart" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idCurrency" type="integer" column="id_currency" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idAddressDelivery" type="integer" column="id_address_delivery" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idAddressInvoice" type="integer" column="id_address_invoice" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="currentState" type="integer" column="current_state" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="secureKey" type="string" column="secure_key" length="32" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default">-1</option>
+      </options>
+    </field>
+    <field name="payment" type="string" column="payment" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="conversionRate" type="decimal" column="conversion_rate" precision="13" scale="6" nullable="false">
+      <options>
+        <option name="default">1.000000</option>
+      </options>
+    </field>
+    <field name="module" type="string" column="module" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="recyclable" type="boolean" column="recyclable" nullable="false">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="gift" type="boolean" column="gift" nullable="false">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="giftMessage" type="text" column="gift_message" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="mobileTheme" type="boolean" column="mobile_theme" nullable="false">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="shippingNumber" type="string" column="shipping_number" length="64" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="totalDiscounts" type="decimal" column="total_discounts" precision="20" scale="6" nullable="false">
+      <options>
+        <option name="default">0.000000</option>
+      </options>
+    </field>
+    <field name="totalDiscountsTaxIncl" type="decimal" column="total_discounts_tax_incl" precision="20" scale="6" nullable="false">
+      <options>
+        <option name="default">0.000000</option>
+      </options>
+    </field>
+    <field name="totalDiscountsTaxExcl" type="decimal" column="total_discounts_tax_excl" precision="20" scale="6" nullable="false">
+      <options>
+        <option name="default">0.000000</option>
+      </options>
+    </field>
+    <field name="totalPaid" type="decimal" column="total_paid" precision="20" scale="6" nullable="false">
+      <options>
+        <option name="default">0.000000</option>
+      </options>
+    </field>
+    <field name="totalPaidTaxIncl" type="decimal" column="total_paid_tax_incl" precision="20" scale="6" nullable="false">
+      <options>
+        <option name="default">0.000000</option>
+      </options>
+    </field>
+    <field name="totalPaidTaxExcl" type="decimal" column="total_paid_tax_excl" precision="20" scale="6" nullable="false">
+      <options>
+        <option name="default">0.000000</option>
+      </options>
+    </field>
+    <field name="totalPaidReal" type="decimal" column="total_paid_real" precision="20" scale="6" nullable="false">
+      <options>
+        <option name="default">0.000000</option>
+      </options>
+    </field>
+    <field name="totalProducts" type="decimal" column="total_products" precision="20" scale="6" nullable="false">
+      <options>
+        <option name="default">0.000000</option>
+      </options>
+    </field>
+    <field name="totalProductsWt" type="decimal" column="total_products_wt" precision="20" scale="6" nullable="false">
+      <options>
+        <option name="default">0.000000</option>
+      </options>
+    </field>
+    <field name="totalShipping" type="decimal" column="total_shipping" precision="20" scale="6" nullable="false">
+      <options>
+        <option name="default">0.000000</option>
+      </options>
+    </field>
+    <field name="totalShippingTaxIncl" type="decimal" column="total_shipping_tax_incl" precision="20" scale="6" nullable="false">
+      <options>
+        <option name="default">0.000000</option>
+      </options>
+    </field>
+    <field name="totalShippingTaxExcl" type="decimal" column="total_shipping_tax_excl" precision="20" scale="6" nullable="false">
+      <options>
+        <option name="default">0.000000</option>
+      </options>
+    </field>
+    <field name="carrierTaxRate" type="decimal" column="carrier_tax_rate" precision="10" scale="3" nullable="false">
+      <options>
+        <option name="default">0.000</option>
+      </options>
+    </field>
+    <field name="totalWrapping" type="decimal" column="total_wrapping" precision="20" scale="6" nullable="false">
+      <options>
+        <option name="default">0.000000</option>
+      </options>
+    </field>
+    <field name="totalWrappingTaxIncl" type="decimal" column="total_wrapping_tax_incl" precision="20" scale="6" nullable="false">
+      <options>
+        <option name="default">0.000000</option>
+      </options>
+    </field>
+    <field name="totalWrappingTaxExcl" type="decimal" column="total_wrapping_tax_excl" precision="20" scale="6" nullable="false">
+      <options>
+        <option name="default">0.000000</option>
+      </options>
+    </field>
+    <field name="roundMode" type="boolean" column="round_mode" nullable="false">
+      <options>
+        <option name="default">2</option>
+      </options>
+    </field>
+    <field name="roundType" type="boolean" column="round_type" nullable="false">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="invoiceNumber" type="integer" column="invoice_number" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="deliveryNumber" type="integer" column="delivery_number" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="invoiceDate" type="datetime" column="invoice_date" nullable="false"/>
+    <field name="deliveryDate" type="datetime" column="delivery_date" nullable="false"/>
+    <field name="valid" type="integer" column="valid" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="dateAdd" type="datetime" column="date_add" nullable="false"/>
+    <field name="dateUpd" type="datetime" column="date_upd" nullable="false"/>
+  </entity>
+</doctrine-mapping>

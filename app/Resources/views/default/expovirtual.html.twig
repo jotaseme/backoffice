@@ -1,0 +1,221 @@
+{% extends 'base.html.twig' %}
+
+{%  block title %}
+    Cecofersa BackOffice
+{% endblock %}
+
+{% block body %}
+    <body class="skin-red-light">
+        <div class="wrapper">
+        {% block header %}
+            {% include 'header.html.twig' %}
+        {% endblock %}
+
+        {% block sidebar %}
+            {% include 'sidebar.html.twig' %}
+        {% endblock %}
+        </div>
+        <div class="content-wrapper">
+            <section class="content-header">
+                <h1>
+                    ExpoCecofersa Virtual
+                    <small>preview of simple tables</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i> <a href="{{ path("homepage") }}"> Inicio</a></li>
+                    <li class="active"> ExpoCecofersa Virtual</li>
+                </ol>
+            </section>
+            <section class="content">
+                <div class="row">
+                    <section class="col-lg-6">
+                        <div id="container" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
+                    </section>
+                    <section class="col-lg-6">
+                        <div id="container_1"></div>
+                    </section>
+                </div>
+                <br/>
+                <div class="content">
+                    <div id="container_2"></div>
+                </div>
+
+            </section>
+        </div>
+    </body>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+
+
+    <script>
+        $(function () {
+            $('#container').highcharts({
+                chart: {
+                    type: 'column',
+                    options3d: {
+                        enabled: true,
+                        alpha: 15,
+                        beta: 15,
+                        viewDistance: 25,
+                        depth: 40
+                    }
+                },
+
+                title: {
+                    text: 'Nº ofertas presentadas en ExpoCecofersa Virtual'
+                },
+
+                xAxis: {
+                    categories: {{ categorias|json_encode|raw }}
+                },
+
+                yAxis: {
+                    allowDecimals: false,
+                    min: 0,
+                    title: {
+                        text: 'Ofertas presentadas'
+                    }
+                },
+
+                tooltip: {
+                    headerFormat: '<b>{point.key}</b><br>',
+                    pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y} / {point.stackTotal}'
+                },
+
+                plotOptions: {
+                    column: {
+                        stacking: 'normal',
+                        depth: 40
+                    }
+                },
+
+                series: [{
+                    name: 'España',
+                    data: {{ array_es | json_encode | raw }}
+
+                }, {
+                    name: 'Portugal',
+                    data: {{ array_pt | json_encode | raw }}
+
+                }]
+            });
+
+
+            // Set up the chart
+            var chart = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'container_1',
+                    type: 'column',
+                    options3d: {
+                        enabled: true,
+                        alpha: 15,
+                        beta: 15,
+                        depth: 50,
+                        viewDistance: 25
+                    }
+                },
+                title: {
+                    text: 'Nº descargas en ExpoCecofersa Virtual'
+                },
+
+                tooltip: {
+
+                    pointFormat: '{point.y:.0f}'
+                },
+
+
+                xAxis: {
+                    title: {
+                        text: 'Años'
+                    },
+                    categories: {{ categorias|json_encode|raw }}
+                },
+                yAxis: {
+                    allowDecimals: false,
+                    min: 0,
+                    title: {
+                        text: 'Descargas'
+                    }
+                },
+
+                plotOptions: {
+                    column: {
+                        depth: 25
+                    }
+                },
+                series: [{
+                    name: 'Descargas',
+                    data: {{ descargas | json_encode | raw }}
+                }]
+            });
+
+
+        });
+
+        $(function () {
+
+                $('#container_2').highcharts({
+
+                    title: {
+                        text: 'Evolución descargas ExpoCecofersa'
+                    },
+                    subtitle: {
+
+                    },
+                    xAxis: {
+                        type: 'datetime'
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Total descargas'
+                        },
+                        min: 0 // this sets minimum values of y to 0
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        area: {
+                            fillColor: {
+                                linearGradient: {
+                                    x1: 0,
+                                    y1: 0,
+                                    x2: 0,
+                                    y2: 2
+                                },
+                                stops: [
+                                    [0, Highcharts.getOptions().colors[0]],
+                                    [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                                ]
+                            },
+                            marker: {
+                                radius: 2
+                            },
+                            lineWidth: 1,
+                            states: {
+                                hover: {
+                                    lineWidth: 1
+                                }
+                            },
+                            threshold: null
+                        }
+                    },
+
+                    series: [{
+                        type: 'area',
+                        name: 'Total descargas',
+                        pointStart: Date.UTC(2014, 0, 1),
+
+                        data: {{ evolucion | json_encode | raw }}
+                    }]
+                });
+        });
+    </script>
+{% endblock %}
